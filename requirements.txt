@@ -1,0 +1,6 @@
+click==7.1.2
+click-default-group==1.2.2
+parso==0.8.1
+sqlite-fts4==1.0.1
+sqlite-utils==3.1
+tabulate==0.8.7
