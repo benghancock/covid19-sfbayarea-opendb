@@ -5,6 +5,11 @@ from sfbayarea_covid19_opendb import build_db
 def main():
     raw_data = data_fetcher.fetch_latest_data()
     processed_data = build_db.preprocess_data(raw_data)
+    db = build_db.setup_db()
+    build_db.insert_records(
+        processed_data=processed_data,
+        db=db
+    )
 
 
 if __name__ == "__main__":
