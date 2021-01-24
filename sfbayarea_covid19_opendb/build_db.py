@@ -32,6 +32,8 @@ def preprocess_data(raw_data: dict) -> dict:
                 record.update(county_info)
                 all_series[series].append(record)
 
+    return all_series
+
 
 def setup_db() -> sqlite_utils.Database:
     # Set a compound primary key on 'date' and 'county', since we only have one
