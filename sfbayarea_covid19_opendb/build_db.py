@@ -2,7 +2,7 @@
 
 import sqlite_utils
 
-DB = "sfbayarea_covid19_opendb.db"
+DB = "SFBAYAREA_COVID19.db"
 
 
 def preprocess_data(raw_data: dict) -> dict:
@@ -72,5 +72,13 @@ def setup_db() -> sqlite_utils.Database:
     return db
 
 
-def insert_records(db: sqlite_utils.Database) -> None:
-    print("TODO!")
+def insert_records(processed_data: dict, db: sqlite_utils.Database) -> None:
+    cases = processed_data.get("cases")
+    deaths = processed_data.get("deaths")
+    tests = processed_data.get("tests")
+
+    db["cases"].insert_all(cases)
+    db["deaths"].insert_all(deaths)
+    db["tests"].insert_all(tests)
+
+    return None
