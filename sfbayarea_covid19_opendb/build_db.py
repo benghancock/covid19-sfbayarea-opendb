@@ -1,34 +1,74 @@
 """Build a simple sqlite database from the BAPD's JSON data"""
 
-import json
 import sqlite_utils
 
-db = sqlite_utils.Database("../covid19_sfbayarea.db")
+DB = "sfbayarea_covid19_opendb.db"
 
-# Pre-process the data by inserting the county name into each record.
-with open("../data/data.v2.json") as data_file:
-    data = json.load(data_file)
 
-cases = []
+def preprocess_data(raw_data: dict) -> dict:
+    """
+    Parse timeseries data for each county; inserting the county name
+    into each record and return a dict of lists, one for each series
+    """
+    all_series = {}
 
-for county in data.keys():
-    county_cases = data[county]["series"].get("cases")
-
-    for record in county_cases:
+    for county in raw_data.keys():
         county_name_clean = county.replace("_", " ").title()
-        county_info = {"county": county_name_clean}
-        record.update(county_info)
-        cases.append(record)
+        series_list = list(raw_data[county]["series"].keys())
 
-# Set a compound primary key on 'date' and 'county', since we only have one
-# observation per day. This will allow easy upserts to the DB without knowing
-# or keeping track of an ID.
+        for series in series_list:
+            # create stub in container for series
+            if all_series.get(series):
+                pass
+            else:
+                all_series[series] = []
 
-db["cases"].create({
-    "date": str,
-    "county": str,
-    "cases": int,
-    "cumul_cases": int,
-}, pk=("date", "county"))
+            records = raw_data.get(county) \
+                              .get("series") \
+                              .get(series)
 
-db["cases"].insert_all(cases)
+            for record in records:
+                county_info = {"county": county_name_clean}
+                record.update(county_info)
+                all_series[series].append(record)
+
+
+def setup_db() -> sqlite_utils.Database:
+    # Set a compound primary key on 'date' and 'county', since we only have one
+    # observation per day. This will allow easy upserts to the DB without knowing
+    # or keeping track of an ID.
+
+    db = sqlite_utils.Database(DB)
+
+    db["cases"].create({
+        "date": str,
+        "county": str,
+        "cases": int,
+        "cumul_cases": int,
+    }, pk=("date", "county"))
+
+    db["deaths"].create({
+        "date": str,
+        "county": str,
+        "deaths": int,
+        "cumul_deaths": int
+    }, pk=("date", "county"))
+
+    db["tests"].create({
+        "date": str,
+        "county": str,
+        "tests": int,
+        "positive": int,
+        "negative": int,
+        "pending": int,
+        "cumul_tests": int,
+        "cumul_pos": int,
+        "cumul_neg": int,
+        "cumul_pend": int
+    }, pk=("date", "county"))
+
+    return db
+
+
+def insert_records(db: sqlite_utils.Database) -> None:
+    print("TODO!")
