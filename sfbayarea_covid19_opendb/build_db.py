@@ -2,8 +2,6 @@
 
 import sqlite_utils
 
-DB = "SFBAYAREA_COVID19.db"
-
 
 def preprocess_data(raw_data: dict) -> dict:
     """
@@ -35,12 +33,12 @@ def preprocess_data(raw_data: dict) -> dict:
     return all_series
 
 
-def setup_db() -> sqlite_utils.Database:
+def setup_db(db_path: str) -> sqlite_utils.Database:
     # Set a compound primary key on 'date' and 'county', since we only have one
     # observation per day. This will allow easy upserts to the DB without knowing
     # or keeping track of an ID.
 
-    db = sqlite_utils.Database(DB)
+    db = sqlite_utils.Database(db_path)
 
     db["cases"].create({
         "date": str,
