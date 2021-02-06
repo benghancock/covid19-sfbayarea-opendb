@@ -64,7 +64,8 @@ def setup_db(db_path: str) -> sqlite_utils.Database:
         "cumul_tests": int,
         "cumul_pos": int,
         "cumul_neg": int,
-        "cumul_pend": int
+        "cumul_pend": int,
+        "positivity": float
     }, pk=("date", "county"))
 
     return db
