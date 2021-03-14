@@ -14,9 +14,9 @@ has been scraped from the various county and state websites accessible for
 members of the public who are data savvy and want to dig into the numbers.
 
 In order to achieve that, this project uses Python to transform the data from
-the format in which is stored for the BAPD into a ``sqlite3`` database. The
-data is then published to the web using `Datasette`_ so that anyone on the
-internet can look at and query the data.
+the JSON format in which is stored for the BAPD into a ``sqlite3``
+database. The data is then published to the web using `Datasette`_ so that
+anyone on the internet can easily view and query the data.
 
 .. _Bay Area Pandemic Dashboard: https://panda.baybrigades.org/
 .. _Datasette: https://datasette.io/
@@ -31,16 +31,18 @@ move into the project directory, create a Python virtual environment, and
 activate it.
 
 ::
+
    $ python3 -m venv env
    $ source env/bin/activate
 
 Note: If you're using a shell other than bash, you may need to swap out the
-``source`` command for the appropriate alternative -- e.g. ``.`` in ``ksh``.
+``source`` command for the appropriate alternative -- e.g. ``.`` in ksh.
 
 With the virtual environment activated, you're ready to install the required
 dependencies using ``pip``.
 
 ::
+
    (env) $ pip install -r requirements.txt
 
 Now you're ready to roll!
@@ -48,6 +50,21 @@ Now you're ready to roll!
 
 Setting Up the DB and Keeping It Up-To-Date
 ===========================================
+
+With the virtual environment still active (see above), you can now run the
+database creation script from within the project root directory.
+
+::
+
+   (env) $ python -m sfbayarea_covid19_opendb.app --init
+
+If all was successful, you'll see a message printed to your terminal indicating
+that the database was created and giving its filename. By default, the database
+will be placed in the working directory and named ``SFBAYAREA_COVID19.db``.
+
+To keep the data up to date (that is, tracking the data fetched and stored for
+the BAPD), periodically run the script with the ``--upsert`` flag.
+
 
 
 Deploying to the Web with Heroku
