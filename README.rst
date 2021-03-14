@@ -123,3 +123,7 @@ Worked? Hooray! The data should now be visible at the chosen subdomain.
 
 Developing
 ==========
+
+This project is being developed as part of the Code for San Francisco's
+Stop COVID-19 project. If you're interested in contributing, feel free to open
+an issue and/or get in touch over Slack. Learn more at https://www.codeforsanfrancisco.org/
