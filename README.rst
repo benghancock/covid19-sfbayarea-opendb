@@ -21,3 +21,38 @@ internet can look at and query the data.
 .. _Bay Area Pandemic Dashboard: https://panda.baybrigades.org/
 .. _Datasette: https://datasette.io/
 
+
+Getting Started
+===============
+
+To get your own copy of the database, you'll need to do a couple things. Start
+by cloning this GitHub repository onto your machine. Once you've done that,
+move into the project directory, create a Python virtual environment, and
+activate it.
+
+::
+   $ python3 -m venv env
+   $ source env/bin/activate
+
+Note: If you're using a shell other than bash, you may need to swap out the
+``source`` command for the appropriate alternative -- e.g. ``.`` in ``ksh``.
+
+With the virtual environment activated, you're ready to install the required
+dependencies using ``pip``.
+
+::
+   (env) $ pip install -r requirements.txt
+
+Now you're ready to roll!
+
+
+Setting Up the DB and Keeping It Up-To-Date
+===========================================
+
+
+Deploying to the Web with Heroku
+================================
+
+
+Developing
+==========
