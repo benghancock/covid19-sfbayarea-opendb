@@ -66,9 +66,59 @@ To keep the data up to date (that is, tracking the data fetched and stored for
 the BAPD), periodically run the script with the ``--upsert`` flag.
 
 
-
 Deploying to the Web with Heroku
 ================================
+
+Simon Willison's fantastic ``datasette`` library makes it very easy to publish
+data from the command line to various cloud platforms. One of those platforms
+is Heroku, and that's what this project uses.
+
+First things first, you'll need to set up a (free) Heroku account. Then, you'll
+need to install the ``heroku-cli`` tool. `Read the instructions here`_ to
+determine the optimal method for your OS. 
+
+.. _Read the instructions here: https://devcenter.heroku.com/articles/heroku-cli
+
+Once you've installed it, log in on your machine via the terminal.
+
+::
+
+   $ heroku login -i
+
+Enter your username and password as prompted. Once you've authenticated, you're
+ready to publish. Go back to the project directory, reactivate your virtual
+environment, and then run the following command:
+
+::
+
+   $ datasette publish heroku --name bapd-open-db SFBAYAREA_COVID19.db
+
+In this example, the value passed to ``--name`` is the subdomain where the data
+will be published (i.e. ``https://bapd-open-db.herokuapp.com``). If a project
+with that name already exists, it will be overwritten; otherwise, a new one
+will be created. Read the docs on `publishing with Datasette`_ for more info.
+
+.. _publishing with Datasette: https://docs.datasette.io/en/stable/publish.html
+
+.. warning::
+
+   ``heroku`` invokes your system's ``tar`` program in preparing the files for
+   the deployment. If you run BSD or a derivative (e.g. macOS), ``heroku`` may
+   not agree with the default ``tar`` version you have installed.
+
+   You can work around this by installing GNU ``tar`` on your system and then
+   passing the additional ``--tar`` option to the ``datasette`` command
+   (e.g. ``datasette publish heroku --name bapd-open-db
+   SFBAYAREA_COVID19.db --tar=/usr/local/bin/gtar``)
+
+   On OpenBSD (and perhaps other BSDs), you may also need to set the
+   environment variable ``TAPE`` prior to running the ``datasette publish``
+   command, due to the way ``heroku`` expects ``tar`` to behave. You can run
+   ``export TAPE="-"`` to have ``tar`` print to stdout rather than trying to
+   actually send output to a tape device.
+
+
+Worked? Hooray! The data should now be visible at the chosen subdomain.
 
 
 Developing
