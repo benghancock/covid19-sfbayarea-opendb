@@ -33,6 +33,29 @@ def preprocess_data(raw_data: dict) -> dict:
     return all_series
 
 
+def make_unified_timeseries(raw_data: dict) -> list:
+    """
+    Transform several separate timeseries data sets into one
+    set of records that can be made into a single table
+    """
+    unified_series = {}
+    all_series = preprocess_data(raw_data)
+
+    for series, records in all_series.items():
+        for record in records:
+            key = ",".join([record.get("date"), record.get("county")])
+
+            if not unified_series.get(key):
+                unified_series[key] = {}
+
+            else:
+                pass
+
+            unified_series[key].update(record)
+
+    return list(unified_series.values())
+
+
 def setup_db(db_path: str) -> sqlite_utils.Database:
     # Set a compound primary key on 'date' and 'county', since we only have one
     # observation per day. This will allow easy upserts to the DB without knowing
