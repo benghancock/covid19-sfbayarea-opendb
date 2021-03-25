@@ -56,11 +56,11 @@ database creation script from within the project root directory.
 
 ::
 
-   (env) $ python -m sfbayarea_covid19_opendb.app --init
+   (env) $ python -m bapd_opendb.app --init
 
 If all was successful, you'll see a message printed to your terminal indicating
 that the database was created and giving its filename. By default, the database
-will be placed in the working directory and named ``SFBAYAREA_COVID19.db``.
+will be placed in the working directory and named ``BAPD_OPENDB.db``.
 
 To keep the data up to date (that is, tracking the data fetched and stored for
 the BAPD), periodically run the script with the ``--upsert`` flag.

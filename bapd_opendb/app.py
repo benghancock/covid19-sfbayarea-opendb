@@ -3,10 +3,10 @@ import sqlite3
 import sqlite_utils
 
 from pathlib import Path
-from sfbayarea_covid19_opendb import data_fetcher
-from sfbayarea_covid19_opendb import build_db
+from bapd_opendb import data_fetcher
+from bapd_opendb import build_db
 
-DB_PATH = "SFBAYAREA_COVID19.db"
+DB_PATH = "BAPD_OPENDB.db"
 
 
 def parse_args():
