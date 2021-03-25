@@ -31,15 +31,12 @@ def parse_args():
 def main():
     args = parse_args()
     raw_data = data_fetcher.fetch_latest_data()
-    processed_data = build_db.preprocess_data(raw_data)
+    unified_series = build_db.make_unified_timeseries(raw_data)
 
     if args.init:
         try:
             db = build_db.setup_db(DB_PATH)
-            build_db.insert_records(
-                processed_data=processed_data,
-                db=db
-            )
+            db["timeseries"].insert_all(unified_series)
             print(f"Set up new database as {DB_PATH}")
 
         except sqlite3.OperationalError:
@@ -49,12 +46,13 @@ def main():
     elif args.upsert:
         if Path(DB_PATH).is_file():
             db = sqlite_utils.Database(DB_PATH)
-            for series in processed_data.keys():
-                print(f"Upserting table {series}")
-                db[series].upsert_all(
-                    processed_data.get(series),
-                    pk=("date", "county")
-                )
+            print(f"Upserting data ...")
+
+            db["timeseries"].upsert_all(
+                unified_series,
+                pk=("date", "county", "metric")
+            )
+
             print(f"Successfully upserted data to {DB_PATH}")
 
         else:
