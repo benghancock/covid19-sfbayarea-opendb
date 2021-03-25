@@ -36,71 +36,46 @@ def preprocess_data(raw_data: dict) -> dict:
 def make_unified_timeseries(raw_data: dict) -> list:
     """
     Transform several separate timeseries data sets into one
-    set of records that can be made into a single table
+    set of 'tidy' records that can be made into a single table
     """
-    unified_series = {}
+    unified_series = []
     all_series = preprocess_data(raw_data)
 
     for series, records in all_series.items():
+
         for record in records:
-            key = ",".join([record.get("date"), record.get("county")])
 
-            if not unified_series.get(key):
-                unified_series[key] = {}
+            date = record.get("date")
+            county = record.get("county")
 
-            else:
-                pass
+            for k, v in record.items():
 
-            unified_series[key].update(record)
+                if k != "county" and k != "date":
+                    tidy_record = {
+                        "date": date,
+                        "county": county,
+                        "metric": k,
+                        "value": v
+                    }
 
-    return list(unified_series.values())
+                    unified_series.append(tidy_record)
+
+    return unified_series
 
 
 def setup_db(db_path: str) -> sqlite_utils.Database:
     # Set a compound primary key on 'date' and 'county', since we only have one
-    # observation per day. This will allow easy upserts to the DB without knowing
+    # observation per day. This will allow easy upserts without knowing
     # or keeping track of an ID.
 
     db = sqlite_utils.Database(db_path)
 
-    db["cases"].create({
+    # TODO Combine this all into one table
+    db["timeseries"].create({
         "date": str,
         "county": str,
-        "cases": int,
-        "cumul_cases": int,
-    }, pk=("date", "county"))
-
-    db["deaths"].create({
-        "date": str,
-        "county": str,
-        "deaths": int,
-        "cumul_deaths": int
-    }, pk=("date", "county"))
-
-    db["tests"].create({
-        "date": str,
-        "county": str,
-        "tests": int,
-        "positive": int,
-        "negative": int,
-        "pending": int,
-        "cumul_tests": int,
-        "cumul_pos": int,
-        "cumul_neg": int,
-        "cumul_pend": int,
-        "positivity": float
-    }, pk=("date", "county"))
+        "metric": str,
+        "value": int,
+    }, pk=("date", "county", "metric"))
 
     return db
-
-
-def insert_records(processed_data: dict, db: sqlite_utils.Database) -> None:
-    cases = processed_data.get("cases")
-    deaths = processed_data.get("deaths")
-    tests = processed_data.get("tests")
-
-    db["cases"].insert_all(cases)
-    db["deaths"].insert_all(deaths)
-    db["tests"].insert_all(tests)
-
-    return None
