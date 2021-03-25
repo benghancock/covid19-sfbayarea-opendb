@@ -1,0 +1,6 @@
+{
+    "title": "Bay Area Pandemic Dashboard (BAPD) Open Database",
+    "description": "This site is an extension of Code for San Francisco's Bay Area Pandemic Dashboard. Here you may query the data supporting the BAPD's charts on the COVID-19 pandemic, which have been scraped from public government sources.",
+    "source": "Bay Area Pandemic Dashboard",
+    "source_url": "https://panda.baybrigades.org/"
+}
