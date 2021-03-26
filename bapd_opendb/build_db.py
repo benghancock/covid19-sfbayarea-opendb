@@ -64,13 +64,11 @@ def make_unified_timeseries(raw_data: dict) -> list:
 
 
 def setup_db(db_path: str) -> sqlite_utils.Database:
-    # Set a compound primary key on 'date' and 'county', since we only have one
-    # observation per day. This will allow easy upserts without knowing
-    # or keeping track of an ID.
-
+    """
+    Set up the database with appropriate columns and composite PK
+    """
     db = sqlite_utils.Database(db_path)
 
-    # TODO Combine this all into one table
     db["timeseries"].create({
         "date": str,
         "county": str,
