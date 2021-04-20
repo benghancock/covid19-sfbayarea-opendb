@@ -63,6 +63,73 @@ def make_unified_timeseries(raw_data: dict) -> list:
     return unified_series
 
 
+def transform_demographic_data(raw_data: dict) -> list:
+    """
+    Extract and transform data on different demographic groups from
+    a nested dict into a list of dicts, in a 'tidy' data format
+    """
+    transformed_data = []
+
+    for county in raw_data.keys():
+        county_name_clean = county.replace("_", " ").title()
+        update_time = raw_data.get(county).get("update_time")
+
+        datasets = ["case_totals", "death_totals"]
+
+        for dataset in datasets:
+            data = raw_data.get(county).get(dataset)
+
+            if data:
+                for k, v in data.items():
+                    # Datasets are structured with keys describing a
+                    # demographic category (e.g. "gender") and values being
+                    # either a dict or a list of dicts, with key-value pairs
+                    # giving the group name (e.g "female") and the value for
+                    # the metric
+
+                    category = k
+
+                    if isinstance(v, dict):
+                        for group, value in v.items():
+
+                            record = {
+                                "county": county_name_clean,
+                                "update_time": update_time,
+                                "category": category,
+                                "group": group,
+                                "metric": dataset,
+                                "value": value
+                            }
+
+                            transformed_data.append(record)
+
+                    elif isinstance(v, list):
+                        for _ in v:
+                            for group, value in _.items():
+                                if category == "age_group":
+                                    group = _.get("group")
+                                    value = _.get("raw_count")
+
+                                else:
+                                    pass
+
+                                record = {
+                                    "county": county_name_clean,
+                                    "update_time": update_time,
+                                    "category": category,
+                                    "group": group,
+                                    "metric": dataset,
+                                    "value": value
+                                }
+
+                            transformed_data.append(record)
+
+                else:
+                    pass
+
+    return transformed_data
+
+
 def setup_db(db_path: str) -> sqlite_utils.Database:
     """
     Set up the database with appropriate columns and composite PK
@@ -75,5 +142,14 @@ def setup_db(db_path: str) -> sqlite_utils.Database:
         "metric": str,
         "value": int,
     }, pk=("date", "county", "metric"))
+
+    db["demographic_totals"].create({
+        "county": str,
+        "update_time": str,
+        "category": str,
+        "group": str,
+        "metric": str,
+        "value": int
+    }, pk=("county", "update_time", "category", "group", "metric"))
 
     return db

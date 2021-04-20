@@ -30,13 +30,16 @@ def parse_args():
 
 def main():
     args = parse_args()
+
     raw_data = data_fetcher.fetch_latest_data()
     unified_series = build_db.make_unified_timeseries(raw_data)
+    demographic_totals = build_db.transform_demographic_data(raw_data)
 
     if args.init:
         try:
             db = build_db.setup_db(DB_PATH)
             db["timeseries"].insert_all(unified_series)
+            db["demographic_totals"].insert_all(demographic_totals)
             print(f"Set up new database as {DB_PATH}")
 
         except sqlite3.OperationalError:
@@ -51,6 +54,11 @@ def main():
             db["timeseries"].upsert_all(
                 unified_series,
                 pk=("date", "county", "metric")
+            )
+
+            db["demographic_totals"].upsert_all(
+                demographic_totals,
+                pk=("county", "update_time", "category", "group", "metric")
             )
 
             print(f"Successfully upserted data to {DB_PATH}")
