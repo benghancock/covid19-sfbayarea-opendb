@@ -2,8 +2,8 @@ env/
 .backup/
 __pycache__/
 TODO*
-*.db
 deploy.sh
+*~
 
 
 
