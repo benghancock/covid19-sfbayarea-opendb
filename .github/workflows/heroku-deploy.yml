@@ -27,5 +27,5 @@ jobs:
 
       - name: Deploy to Heroku
         env:
-	  HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: datasette publish heroku BAPD_OPENDB.db --name test-bapd-opendb -m metadata.json
