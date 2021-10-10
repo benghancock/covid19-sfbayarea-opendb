@@ -1,11 +1,11 @@
 name: Deploy BAPD to Heroku with fresh data
 
 on:
-  workflow-dispatch
+  workflow_dispatch
 
 jobs:
 
-  bapd-fetch-and-deploy
+  bapd-fetch-and-deploy:
     runs-on: ubuntu-latest
     steps:
 
