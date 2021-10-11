@@ -23,9 +23,11 @@ jobs:
           pip install -r requirements.txt
 
       - name: Fetch the latest data
-        run: python -m bapd_opendb.app --init
+        run: python -m bapd_opendb.app --upsert
 
       - name: Deploy to Heroku
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: datasette publish heroku BAPD_OPENDB.db --name test-bapd-opendb -m metadata.json
+        run: |
+          heroku plugins:install heroku-builds
+          datasette publish heroku BAPD_OPENDB.db --name test-bapd-opendb -m metadata.json
