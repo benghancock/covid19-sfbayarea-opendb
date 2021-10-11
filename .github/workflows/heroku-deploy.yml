@@ -1,7 +1,9 @@
 name: Deploy BAPD to Heroku with fresh data
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
+  schedule:
+  - cron: '1 12 * * *'
 
 jobs:
 
