@@ -32,4 +32,4 @@ jobs:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
           heroku plugins:install heroku-builds
-          datasette publish heroku BAPD_OPENDB.db --name test-bapd-opendb -m metadata.json
+          datasette publish heroku BAPD_OPENDB.db --name bapd-opendb -m metadata.json
