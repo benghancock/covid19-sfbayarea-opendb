@@ -2,6 +2,14 @@
  The BAPD Open Database
 ========================
 
+.. attention::
+
+   This repository and its associated projects are no longer active. Though
+   the processes that scrape and supply the data for the BAPD Open Database
+   may still be running, they are no longer monitored. This repository is
+   being archived and hopefully the instructions below may be useful for
+   future data projects using a similar stack.
+
 About
 =====
 
@@ -75,7 +83,7 @@ is Heroku, and that's what this project uses.
 
 First things first, you'll need to set up a (free) Heroku account. Then, you'll
 need to install the ``heroku-cli`` tool. `Read the instructions here`_ to
-determine the optimal method for your OS. 
+determine the optimal method for your OS.
 
 .. _Read the instructions here: https://devcenter.heroku.com/articles/heroku-cli
 
